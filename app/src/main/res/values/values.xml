@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_image_default">@string/image_quality_high</string>
+    <string name="image_quality_high">High</string>
+    <string name="image_quality_medium">Medium</string>
+    <string name="image_quality_low">Low</string>
+    <string name="searchSimilarMedia">Search similar media</string>
+    <string name="shortcut_search_similar_label">Search similar media</string>
+    <string name="shortcut_search_recommended_label">Search recommended media</string>
+
+    <string-array name="pref_image_quality_values">
+        <item>HIGH</item>
+        <item>MEDIUM</item>
+        <item>LOW</item>
+    </string-array>
+
+    <string-array name="pref_image_quality_titles">
+        <item>@string/image_quality_high</item>
+        <item>@string/image_quality_medium</item>
+        <item>@string/image_quality_low</item>
+    </string-array>
+</resources>

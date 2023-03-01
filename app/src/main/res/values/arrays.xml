@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="searchSynonyms">
+        <item>Show</item>
+        <item>Display</item>
+        <item>Search</item>
+        <item>Find</item>
+        <item>Open</item>
+    </array>
+
+    <array name="similarMediaTypes">
+        <item>Media</item>
+        <item>Results</item>
+        <item>Pictures</item>
+        <item>Music</item>
+        <item>Audio</item>
+        <item>Documents</item>
+        <item>Text</item>
+        <item>Objects</item>
+        <item>similar Media</item>
+        <item>similar Results</item>
+        <item>similar Pictures</item>
+        <item>similar Music</item>
+        <item>similar Audio</item>
+        <item>similar Documents</item>
+        <item>similar Text</item>
+        <item>similar Objects</item>
+    </array>
+
+    <array name="recommendedMediaTypes">
+        <item>recommended Media</item>
+        <item>recommended Results</item>
+        <item>recommended Pictures</item>
+        <item>recommended Music</item>
+        <item>recommended Audio</item>
+        <item>recommended Documents</item>
+        <item>recommended Text</item>
+        <item>recommended Objects</item>
+    </array>
+</resources>

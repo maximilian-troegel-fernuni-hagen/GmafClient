@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/home_view_pager_fragment">
+
+    <fragment
+        android:id="@+id/home_view_pager_fragment"
+        android:name="de.max.troegel.gmaf.ui.fragment.HomeViewPagerFragment"
+        tools:layout="@layout/fragment_home_view_pager">
+        <action
+            android:id="@+id/home_view_pager_fragment_to_search_fragment"
+            app:destination="@id/search_fragment" />
+        <action
+            android:id="@+id/home_view_pager_fragment_to_result_fragment"
+            app:destination="@id/result_fragment" />
+        <action
+            android:id="@+id/home_view_pager_fragment_to_settings_fragment"
+            app:destination="@id/settings_fragment" />
+        <action
+            android:id="@+id/home_view_pager_fragment_to_gallery_fragment"
+            app:destination="@id/gallery_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/search_fragment"
+        android:name="de.max.troegel.gmaf.ui.fragment.SearchFragment"
+        tools:layout="@layout/fragment_search">
+        <argument
+            android:name="query"
+            app:argType="de.max.troegel.gmaf.data.model.GmafQuery" />
+        <action
+            android:id="@+id/search_fragment_to_result_fragment"
+            app:destination="@id/result_fragment" />
+        <action
+            android:id="@+id/search_fragment_to_settings_fragment"
+            app:destination="@id/settings_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/result_fragment"
+        android:name="de.max.troegel.gmaf.ui.fragment.ResultFragment"
+        tools:layout="@layout/fragment_result">
+        <argument
+            android:name="query"
+            app:argType="de.max.troegel.gmaf.data.model.GmafQuery" />
+        <argument
+            android:name="images"
+            app:argType="de.max.troegel.gmaf.data.model.GmafImage[]" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <action
+            android:id="@+id/result_fragment_to_search_fragment"
+            app:destination="@id/result_fragment" />
+        <action
+            android:id="@+id/result_fragment_to_settings_fragment"
+            app:destination="@id/settings_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="de.max.troegel.gmaf.ui.fragment.SettingsFragment"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/settings_fragment_to_search_fragment"
+            app:destination="@id/search_fragment" />
+        <action
+            android:id="@+id/settings_fragment_to_result_fragment"
+            app:destination="@id/result_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/gallery_fragment"
+        android:name="de.max.troegel.gmaf.ui.fragment.GalleryFragment"
+        tools:layout="@layout/fragment_gallery">
+        <argument
+            android:name="images"
+            app:argType="de.max.troegel.gmaf.data.model.GmafMedia[]" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="query"
+            app:argType="de.max.troegel.gmaf.data.model.GmafQuery" />
+        <action
+            android:id="@+id/gallery_fragment_to_result_fragment"
+            app:destination="@id/result_fragment" />
+        <action
+            android:id="@+id/gallery_fragment_to_details_fragment"
+            app:destination="@id/details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/details_fragment"
+        android:name="de.max.troegel.gmaf.ui.fragment.DetailsFragment"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="media"
+            app:argType="de.max.troegel.gmaf.data.model.GmafMedia" />
+        <argument
+            android:name="query"
+            app:argType="de.max.troegel.gmaf.data.model.GmafQuery" />
+        <action
+            android:id="@+id/details_fragment_to_gallery_fragment"
+            app:destination="@id/gallery_fragment" />
+    </fragment>
+
+</navigation>

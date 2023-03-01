@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/api_settings">
+
+        <EditTextPreference
+            android:defaultValue="@string/api_url_default"
+            android:icon="@drawable/ic_baseline_api_url_24"
+            android:key="pref_api_url"
+            android:summary="@string/api_url_summary"
+            android:title="@string/api_url_title" />
+
+        <ListPreference
+            android:defaultValue="@string/image_quality_high"
+            android:entries="@array/pref_image_quality_titles"
+            android:entryValues="@array/pref_image_quality_values"
+            android:icon="@drawable/ic_baseline_quality_24"
+            android:key="pref_image_quality"
+            android:summary="@string/image_quality_summary"
+            android:title="@string/image_quality_title" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/developer_settings">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/ic_baseline_logging_24"
+            android:key="pref_deactivate_logging"
+            android:summary="@string/deactivate_logging_summary"
+            android:title="@string/deactivate_logging_title" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
