@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shortcuts
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-<!-- Tell the OS that we can handle the "Open App Feature" -->
-    <capability android:name="actions.intent.OPEN_APP_FEATURE">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="de.max.troegel.gmaf"
-            android:targetClass="de.max.troegel.gmaf.app.MainActivity">
-            <parameter
-            android:name="feature"
-            android:key="feature" />
-        </intent>
-    </capability>
-
     <!-- Tell the Google Assistant which “features” this app supports -->
     <shortcut
         android:shortcutId="search_similar_media"
@@ -34,19 +20,7 @@
                 android:value="@array/recommendedMediaTypes" />
         </capability-binding>
     </shortcut>
-
-    <!-- Register the open action for the general search -->
-    <capability android:name="actions.intent.GET_THING">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="de.max.troegel.gmaf"
-            android:targetClass="de.max.troegel.gmaf.app.MainActivity">
-            <parameter
-                android:name="thing.name"
-                android:key="content"/>
-        </intent>
-    </capability>
-
+    
     <!-- Register a custom action for the search of recommended media-->
     <capability
         android:name="custom.actions.intent.SEARCH_SIMILAR_MEDIA"
@@ -54,8 +28,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="de.max.troegel.gmaf.app.MainActivity">
-            <url-template
-                android:value="http://www.gmaf.de/search_similar_media/{?media_description}" />
+            <url-template android:value="http://www.gmaf.de/search_similar_media/{?media_description}" />
             <parameter
                 android:name="media_description"
                 android:key="media_description"
@@ -68,8 +41,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="de.max.troegel.gmaf.app.MainActivity">
-            <url-template
-                android:value="http://www.gmaf.de/search_similar_media/{?media_description}" />
+            <url-template android:value="http://www.gmaf.de/search_similar_media/{?media_description}" />
             <parameter
                 android:name="media_description"
                 android:key="media_description"

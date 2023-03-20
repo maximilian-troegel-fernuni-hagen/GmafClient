@@ -35,6 +35,8 @@ import de.max.troegel.gmaf.databinding.FragmentDetailsBinding
 import de.max.troegel.gmaf.viewmodel.DetailsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.lang.Integer.min
+import kotlin.math.roundToInt
 
 
 class DetailsFragment : Fragment(), OnChartValueSelectedListener {
@@ -63,6 +65,7 @@ class DetailsFragment : Fragment(), OnChartValueSelectedListener {
             generateTable()
             generateQuery()
             generateChart()
+            generateEmptyMessage()
         }
         return binding.root
     }
@@ -84,41 +87,47 @@ class DetailsFragment : Fragment(), OnChartValueSelectedListener {
         tableTitleCell.text = getString(R.string.graph_code)
         titleRow.addView(tableTitleCell)
         val columns = mutableListOf<String>()
-        dictionary.forEach {
-            val word = it.extractWord()
-            if (columns.none { column ->
-                    column.contains(word)
-                }) {
-                columns.add(word)
-                val titleCell = createTextView(viewModel.getColorForWord(word))
-                titleCell.text = word
-                titleRow.addView(titleCell)
+        dictionary.forEachIndexed { index, string ->
+            if (columns.size < 22) {
+                val word = string.extractWord()
+                if (columns.none { column ->
+                        column.contains(word)
+                    }) {
+                    columns.add(word)
+                    val titleCell = createTextView(viewModel.getColorForWord(word))
+                    titleCell.text = word
+                    titleRow.addView(titleCell)
+                }
             }
         }
         titleRow.background = createCellBackground(Color.TRANSPARENT)
         binding.table.addView(titleRow, LayoutParams(MATCH_PARENT, WRAP_CONTENT))
         val rows = mutableListOf<String>()
         dictionary.forEachIndexed { x, element ->
-            val word = element.extractWord()
-            if (rows.none { row ->
-                    row.contains(word)
-                }) {
-                rows.add(word)
-                val valueRow = TableRow(context)
-                val rowTitle = createTextView(viewModel.getColorForWord(word))
-                rowTitle.text = word
-                valueRow.addView(rowTitle)
-                for (y in 0 until dictionary.size) {
-                    val valueCell = createTextView(Color.TRANSPARENT)
-                    valueCell.text = "${graphCode.getValue(x, y)}"
-                    valueRow.addView(valueCell)
-                    if (x == y) {
-                        valueRow.background = createCellBackground(viewModel.getColorForWord(word))
+            if (rows.size < 22) {
+                val word = element.extractWord()
+                if (rows.none { row ->
+                        row.contains(word)
+                    }) {
+                    rows.add(word)
+                    val valueRow = TableRow(context)
+                    val rowTitle = createTextView(viewModel.getColorForWord(word))
+                    rowTitle.text = word
+                    valueRow.addView(rowTitle)
+                    for (y in 0 until dictionary.size) {
+                        if (y < 21) {
+                            val valueCell = createTextView(Color.TRANSPARENT)
+                            valueCell.text = "${graphCode.getValue(x, y)}"
+                            valueRow.addView(valueCell)
+                            if (x == y) {
+                                valueRow.background = createCellBackground(viewModel.getColorForWord(word))
+                            }
+                        }
                     }
+                    valueRow.background = createCellBackground(Color.TRANSPARENT)
+                    binding.table.addView(valueRow, LayoutParams(MATCH_PARENT, WRAP_CONTENT))
+                    binding.table.background = createCellBackground(Color.TRANSPARENT, 4)
                 }
-                valueRow.background = createCellBackground(Color.TRANSPARENT)
-                binding.table.addView(valueRow, LayoutParams(MATCH_PARENT, WRAP_CONTENT))
-                binding.table.background = createCellBackground(Color.TRANSPARENT, 4)
             }
         }
     }
@@ -177,6 +186,7 @@ class DetailsFragment : Fragment(), OnChartValueSelectedListener {
         xAxis.granularity = 1f
         xAxis.setDrawAxisLine(true)
         xAxis.valueFormatter = AxisLabelGenerator(labels)
+        xAxis.setLabelCount(min(9, queryWordOccurrence.size), false)
         val leftAxis: YAxis = binding.chart.axisLeft
         leftAxis.setDrawAxisLine(false)
         val rightAxis: YAxis = binding.chart.axisRight
@@ -202,6 +212,14 @@ class DetailsFragment : Fragment(), OnChartValueSelectedListener {
         return drawable
     }
 
+    private fun generateEmptyMessage() {
+        if (args.media.gc == null || args.media.gc.dictionary.isNullOrEmpty()) {
+            binding.emptyText.visibility = View.VISIBLE
+        } else {
+            binding.emptyText.visibility = View.GONE
+        }
+    }
+
     private fun setupButtonObserver() {
         binding.backButton.setOnClickListener {
             onBackButtonClicked()
@@ -225,8 +243,8 @@ class DetailsFragment : Fragment(), OnChartValueSelectedListener {
 
     class AxisLabelGenerator(private val values: List<String>) : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
-            val label = values[value.toInt()]
-            return if (label.length > 8) label.substring(0, 8) + "." else label
+            val label = values[value.roundToInt()]
+            return if (label.length > 6) label.substring(0, 6) + "." else label
         }
     }
 }

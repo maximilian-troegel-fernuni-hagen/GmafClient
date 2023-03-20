@@ -19,6 +19,7 @@
     <string name="search_similar">Search for similar media of </string>
     <string name="query_creation_failed">Query creation failed</string>
     <string name="no_endpoint_warning">Using local test files - No api endpoint defined! Please change the endpoint in the settings.</string>
+    <string name="help">Help</string>
 
     <string name="loading_results_to_show">Loading results...</string>
     <string name="no_results_to_show">No results to show!</string>
@@ -38,8 +39,8 @@
     <string name="deactivate_logging_title">Deactivate logging</string>
     <string name="deactivate_logging_summary">This stops printing to the android logcat.</string>
 
-    <string name="search_similar_media">Search similar media with\u0020</string>
-    <string name="search_recommended_media">Search recommended media with\u0020</string>
+    <string name="search_similar_media">Search similar media of\u0020</string>
+    <string name="search_recommended_media">Search recommended media of\u0020</string>
 
     <string-array name="SearchSimilarMediaQueries">
         <item>Search for $media_description</item>

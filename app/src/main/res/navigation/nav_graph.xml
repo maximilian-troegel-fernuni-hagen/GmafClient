@@ -76,9 +76,6 @@
         android:name="de.max.troegel.gmaf.ui.fragment.GalleryFragment"
         tools:layout="@layout/fragment_gallery">
         <argument
-            android:name="images"
-            app:argType="de.max.troegel.gmaf.data.model.GmafMedia[]" />
-        <argument
             android:name="position"
             app:argType="integer" />
         <argument

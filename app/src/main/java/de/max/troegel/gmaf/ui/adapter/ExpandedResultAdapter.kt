@@ -79,14 +79,15 @@ class ExpandedResultAdapter(
         private val binding: ListItemGalleryBinding,
         private val context: Context,
         private val getPlayer: (context: Context, media: GmafMedia) -> ExoPlayer
-    ):
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             media: GmafMedia,
             onItemClicked: () -> Unit,
             onInfoButtonClicked: (GmafMedia) -> Unit,
-            onBackButtonClicked: () -> Unit) {
+            onBackButtonClicked: () -> Unit
+        ) {
             binding.imageView.setOnClickListener {
                 onItemClicked()
             }

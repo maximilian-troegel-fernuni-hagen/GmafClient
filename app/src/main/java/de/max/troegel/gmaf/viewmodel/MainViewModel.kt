@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import de.max.troegel.gmaf.R
 import de.max.troegel.gmaf.data.model.GmafQuery
 import de.max.troegel.gmaf.data.model.QueryType
+import de.max.troegel.gmaf.data.repository.MediaRepository
 import de.max.troegel.gmaf.data.repository.QueryRepository
 import de.max.troegel.gmaf.data.repository.SettingsRepository
 import de.swa.gc.GraphCode
@@ -16,6 +17,7 @@ import java.util.*
 
 class MainViewModel(
     private val queryRepository: QueryRepository,
+    private val mediaRepository: MediaRepository,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
@@ -28,6 +30,8 @@ class MainViewModel(
      * Handles the action from the intent depending on the type
      */
     fun handleIntent(intent: Intent, context: Context) {
+        queryRepository.setQuery(null)
+        mediaRepository.setResponse(null)
         when (intent.action) {
             Intent.ACTION_VIEW -> parseIntent(intent, context)
             Intent.ACTION_MAIN -> {
@@ -43,12 +47,15 @@ class MainViewModel(
     private fun parseIntent(intent: Intent, context: Context) {
         val data = intent.data
         val type = intent.type
-        val encodedPath = data?.encodedPath
-        val searchDescription: String = data?.getQueryParameter("media_description") ?: ""
-        Timber.log(Log.INFO, "Parse intent $data $type $encodedPath $searchDescription")
+        val encodedPath = data?.encodedPath?.substringBeforeLast("/")
+        val searchDescription: String = data?.getQueryParameter("media_description")?.replace("\"", "") ?: ""
+        Timber.log(
+            Log.INFO, "Parse intent data $data type $type encodedPath $encodedPath " +
+                    "searchDescription $searchDescription"
+        )
         if (encodedPath != null) {
             when (encodedPath) {
-                "/search_similar_media/" -> {
+                "/search_similar_media" -> {
                     setQuery(
                         GmafQuery(
                             Date().time,
@@ -58,7 +65,7 @@ class MainViewModel(
                         )
                     )
                 }
-                "/search_recommended_media/" -> {
+                "/search_recommended_media" -> {
                     setQuery(
                         GmafQuery(
                             Date().time,
@@ -100,7 +107,7 @@ class MainViewModel(
             }
         }
         val gcQuery = GraphCode()
-        gcQuery.dictionary = dictionary
+        gcQuery.dictionary = Vector(dictionary)
         return gcQuery
     }
 

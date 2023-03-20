@@ -2,13 +2,18 @@ package de.max.troegel.gmaf.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
+import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import de.max.troegel.gmaf.R
 import de.max.troegel.gmaf.app.getNavigationParent
@@ -30,27 +35,76 @@ class SearchFragment : Fragment() {
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         binding.queryText.text = ""
+        binding.simulateExampleQuery.visibility = if (viewModel.useApiStub()) View.VISIBLE else View.GONE
         setupButtonObserver()
         setupQueryObserver()
         setupResultObserver()
+        setHasOptionsMenu(true)
         return binding.root
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_help, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.getItemId()) {
+            R.id.action_help -> showExampleIntentDialog()
+            else -> false
+        }
+    }
+
+    private fun showExampleIntentDialog(): Boolean {
+        context?.let { context ->
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Example intents")
+            val message = TextView(context)
+            message.setPadding(10)
+            val string = SpannableString(
+                "http://www.gmaf.de/search_similar_media/?media_description=swimming+animals"
+                        + "\n\n" + "http://www.gmaf.de/search_similar_media/?media_description=a+vacation+with+palm+trees"
+                        + "\n\n" + "http://www.gmaf.de/search_similar_media/?media_description=picture"
+                        + "\n\n" + "http://www.gmaf.de/search_similar_media/?media_description=a+fish"
+            )
+            Linkify.addLinks(string, Linkify.WEB_URLS)
+            message.text = string
+            message.movementMethod = LinkMovementMethod.getInstance()
+            val container = FrameLayout(context)
+            val params: FrameLayout.LayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            params.leftMargin = 45
+            params.rightMargin = 45
+            message.layoutParams = params
+            container.addView(message)
+            builder.setView(container)
+            builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
+                dialog.dismiss()
+            }
+            builder.show()
+        }
+        return true
+    }
+
     private fun setupButtonObserver() {
+        binding.simulateExampleQuery.setOnClickListener {
+            if (context != null) {
+                context?.let { context ->
+                    if (viewModel.useApiStub()) {
+                        // Execute an example intent against the api stub
+                        viewModel.simulateIntent(context)
+                    }
+                }
+            }
+        }
         binding.talkButton.setOnClickListener {
             if (context != null) {
                 context?.let { context ->
-                    if (viewModel.useApiStub() || true) {
-                        // Execute an example intent against the api stub
-                        viewModel.simulateIntent(context)
-                    } else {
-                        // Open the google assistant to execute a custom query
-                        ContextCompat.startActivity(
-                            context,
-                            Intent(Intent.ACTION_VOICE_COMMAND).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                            null
-                        )
-                    }
+                    // Open the google assistant to execute a custom query
+                    ContextCompat.startActivity(
+                        context,
+                        Intent(Intent.ACTION_VOICE_COMMAND).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                        null
+                    )
                 }
             } else {
                 showErrorMessage()

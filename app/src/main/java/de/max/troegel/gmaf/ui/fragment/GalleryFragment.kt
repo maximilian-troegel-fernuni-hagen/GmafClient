@@ -10,19 +10,24 @@ import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import de.max.troegel.gmaf.data.model.GmafMedia
 import de.max.troegel.gmaf.data.model.GmafQuery
+import de.max.troegel.gmaf.data.model.Result
 import de.max.troegel.gmaf.databinding.FragmentGalleryBinding
 import de.max.troegel.gmaf.ui.adapter.ExpandedResultAdapter
+import de.max.troegel.gmaf.viewmodel.GalleryViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GalleryFragment : Fragment() {
 
     private lateinit var binding: FragmentGalleryBinding
+    private val viewModel: GalleryViewModel by viewModel()
     private lateinit var query: GmafQuery
     private val args: GalleryFragmentArgs by navArgs()
 
     private val expandedResultAdapter = ExpandedResultAdapter(
         this::onItemClicked,
         this::onInfoButtonClicked,
-        this::onBackButtonClicked)
+        this::onBackButtonClicked
+    )
 
     private var onPageChangeCallback: PageChangeCallback? = null
 
@@ -52,13 +57,19 @@ class GalleryFragment : Fragment() {
 
     private fun setupViewPager() {
         binding.viewPager.adapter = expandedResultAdapter
-        val images = args.images.toList()
-        expandedResultAdapter.submitList(images)
-        val position = args.position
-        binding.viewPager.setCurrentItem(position, false)
-        onPageChangeCallback = PageChangeCallback(this::onPageChanged)
-        binding.viewPager.registerOnPageChangeCallback(onPageChangeCallback!!)
-        query = args.query
+        viewModel.results.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Success -> {
+                    expandedResultAdapter.submitList(result.data)
+                    val position = args.position
+                    binding.viewPager.setCurrentItem(position, false)
+                    onPageChangeCallback = PageChangeCallback(this::onPageChanged)
+                    binding.viewPager.registerOnPageChangeCallback(onPageChangeCallback!!)
+                    query = args.query
+                }
+                else -> {}
+            }
+        }
     }
 
     private fun setupFullscreen() {

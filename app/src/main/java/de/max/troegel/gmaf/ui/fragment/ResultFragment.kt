@@ -88,10 +88,9 @@ class ResultFragment : Fragment() {
     }
 
     private fun onItemClicked(position: Int) {
-        val images = resultAdapter.currentList.toTypedArray()
         val direction =
             HomeViewPagerFragmentDirections.homeViewPagerFragmentToGalleryFragment(
-                images, position, viewModel.query.value ?: GmafQuery(Date().time, QueryType.FIND_RECOMMENDED_MEDIA, "water animals", GraphCode().fromDict(mutableListOf("fish", "water", "swimming")))
+                position, viewModel.query.value ?: GmafQuery(Date().time, QueryType.FIND_RECOMMENDED_MEDIA, "water animals", GraphCode().fromDict(mutableListOf("fish", "water", "swimming")))
             )
         findNavController().navigate(direction)
     }

@@ -81,43 +81,47 @@ class DetailsViewModel(
 
         graphCode.dictionary.forEach {
             val word = it.extractWord()
-            var occurrence = 0
-            val dictEntries = dictionary.searchWord(word).map { dictEntry ->
-                gson.toJson(dictEntry)
-            }
-            occurrence += dictEntries.filter { dictEntry -> dictEntry.contains(word) }.size
-            query.getQueryText().split(" ").forEach { queryComponent ->
-                val queryWord = queryComponent.extractWord()
-                if (queryWord != word) {
-                    val dictEntries = dictionary.searchWord(queryWord).map { dictEntry ->
-                        gson.toJson(dictEntry)
-                    }
-                    occurrence += dictEntries.filter { dictEntry ->
-                        dictEntry.contains(word)
-                    }.size
+            if (word.length > 1 && queryWordOccurrence.size < 9) {
+                var occurrence = 0
+                val dictEntries = dictionary.searchWord(word).map { dictEntry ->
+                    gson.toJson(dictEntry)
                 }
-            }
-            if (occurrence > 0) {
-                queryWordOccurrence[word] = occurrence
+                occurrence += dictEntries.filter { dictEntry -> dictEntry.contains(word) }.size
+                query.getQueryText().split(" ").forEach { queryComponent ->
+                    val queryWord = queryComponent.extractWord()
+                    if (queryWord != word) {
+                        val dictEntries = dictionary.searchWord(queryWord).map { dictEntry ->
+                            gson.toJson(dictEntry)
+                        }
+                        occurrence += dictEntries.filter { dictEntry ->
+                            dictEntry.contains(word)
+                        }.size
+                    }
+                }
+                if (occurrence > 0) {
+                    queryWordOccurrence[word] = occurrence
+                }
             }
         }
         query.getQueryText().split(" ").forEach { queryComponent ->
             val queryWord = queryComponent.extractWord()
-            var occurrence = 0
-            graphCode.dictionary.forEach {
-                val word = it.extractWord()
-                if (queryWord != word) {
-                    val dictEntries = dictionary.searchWord(word).map { dictEntry ->
-                        gson.toJson(dictEntry)
+            if (queryWord.length > 1 && queryWordOccurrence.size < 9) {
+                var occurrence = 0
+                graphCode.dictionary.forEach {
+                    val word = it.extractWord()
+                    if (queryWord != word) {
+                        val dictEntries = dictionary.searchWord(word).map { dictEntry ->
+                            gson.toJson(dictEntry)
+                        }
+                        occurrence += dictEntries.filter { dictEntry -> dictEntry.contains(queryWord) }.size // word
                     }
-                    occurrence += dictEntries.filter { dictEntry -> dictEntry.contains(queryWord) }.size // word
                 }
-            }
-            if (queryWord in queryWordOccurrence) {
-                occurrence = max(occurrence, queryWordOccurrence[queryWord] ?: 0)
-                queryWordOccurrence[queryWord] = occurrence
-            } else {
-                queryWordOccurrence[queryWord] = occurrence
+                if (queryWord in queryWordOccurrence) {
+                    occurrence = max(occurrence, queryWordOccurrence[queryWord] ?: 0)
+                    queryWordOccurrence[queryWord] = occurrence
+                } else {
+                    queryWordOccurrence[queryWord] = occurrence
+                }
             }
         }
         return queryWordOccurrence

@@ -22,6 +22,19 @@ class MediaDownloadRemoteStub(
 
     private val random = Random()
 
+    private val exampleList: GmafMediaList = mutableListOf(
+        createGmafImageStub("0", R.drawable.test_image_0423, immutableListOf("turtle", "animal", "grass", "brown", "land")),
+        createGmafImageStub("1", R.drawable.test_image_0472, immutableListOf("fish", "water", "swimming", "animal", "blue")),
+        createGmafAudioStub("2", "http://www.openmusicarchive.org/audio/April_Kisses.mp3"),
+        createGmafDocumentStub("3", "https://github.com/ljharb/json-file-plus/blob/main/package.json", "This is a nice document.\nThe text is very short."),
+        createGmafImageStub("4", R.drawable.test_image_0003, immutableListOf("palm", "pool", "vacation", "water")),
+        createGmafImageStub("5", R.drawable.test_image_0406, immutableListOf("child", "paper", "boxes", "crayons", "human")),
+        createGmafImageStub("6", R.drawable.test_image_0417, immutableListOf("art", "people", "street", "human")),
+        createGmafImageStub("7", R.drawable.test_image_0453, immutableListOf("window", "green", "wall", "house")),
+        createGmafImageStub("8", R.drawable.test_image_0660, immutableListOf("sculpture", "architecture", "culture", "stone")),
+        createGmafImageStub("9", R.drawable.test_image_0668, immutableListOf("backpack", "mountain", "hiking", "clouds", "human"))
+    )
+
     /**
      * Download the image data from the given [urls]
      *
@@ -29,18 +42,20 @@ class MediaDownloadRemoteStub(
      */
     override suspend fun downloadMedia(results: Vector<MMFG?>?): GmafMediaList {
         return withContext(dispatchers.io) {
-            mutableListOf(
-                createGmafImageStub("0", R.drawable.test_image_0423, immutableListOf("turtle", "animal", "grass", "brown")),
-                createGmafImageStub("1", R.drawable.test_image_0472, immutableListOf("fish", "water", "swimming")),
-                createGmafAudioStub("2", "http://www.openmusicarchive.org/audio/April_Kisses.mp3"),
-                createGmafDocumentStub("3", "https://github.com/ljharb/json-file-plus/blob/main/package.json", "This is a nice document.\nThe text is very short."),
-                createGmafImageStub("4", R.drawable.test_image_0003, immutableListOf("palms", "pool", "holiday", "water")),
-                createGmafImageStub("5", R.drawable.test_image_0406, immutableListOf("child", "paper", "boxes", "crayons")),
-                createGmafImageStub("6", R.drawable.test_image_0417, immutableListOf("art", "people", "street")),
-                createGmafImageStub("7", R.drawable.test_image_0453, immutableListOf("window", "green")),
-                createGmafImageStub("8", R.drawable.test_image_0660, immutableListOf("sculpture")),
-                createGmafImageStub("9", R.drawable.test_image_0668, immutableListOf("backpack", "mountain", "hiking", "clouds"))
-            )
+            val resultList = mutableListOf<GmafMedia>()
+            for (media in exampleList) {
+                if (media.gc.dictionary.find {
+                        results?.first()?.generalMetadata?.grapCode?.dictionary?.contains(it) == true
+                    } != null) {
+                    resultList.add(media)
+                }
+            }
+            for (media in exampleList) {
+                if (!resultList.contains(media)) {
+                    resultList.add(media)
+                }
+            }
+            resultList
         }
     }
 

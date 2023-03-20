@@ -49,8 +49,4 @@ class GmafQuery(
     override fun toString(): String {
         return "{queryType: $queryType, queryText: $queryText, graphCode: $graphCode}"
     }
-
-    fun getDatee() {
-        getDate()
-    }
 }

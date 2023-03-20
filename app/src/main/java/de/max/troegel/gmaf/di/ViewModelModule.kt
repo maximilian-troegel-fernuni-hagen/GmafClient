@@ -13,7 +13,7 @@ val viewModelModule = module {
     /**
      * MainViewModel instance
      */
-    viewModel { provideMainViewModel(get(), get()) }
+    viewModel { provideMainViewModel(get(), get(), get()) }
     /**
      * SearchViewModel instance
      */
@@ -22,6 +22,10 @@ val viewModelModule = module {
      * ResultViewModel instance
      */
     viewModel { provideResultViewModel(get(), get()) }
+    /**
+     * GalleryViewModel instance
+     */
+    viewModel { provideGalleryViewModel(get()) }
     /**
      * DetailsViewModel instance
      */
@@ -34,9 +38,10 @@ val viewModelModule = module {
 
 private fun provideMainViewModel(
     queryRepository: QueryRepository,
+    mediaRepository: MediaRepository,
     settingsRepository: SettingsRepository
 ): MainViewModel {
-    return MainViewModel(queryRepository, settingsRepository)
+    return MainViewModel(queryRepository, mediaRepository, settingsRepository)
 }
 
 private fun provideSearchViewModel(
@@ -53,6 +58,12 @@ private fun provideResultViewModel(
     mediaRepository: MediaRepository
 ): ResultViewModel {
     return ResultViewModel(queryRepository, mediaRepository)
+}
+
+private fun provideGalleryViewModel(
+    mediaRepository: MediaRepository
+): GalleryViewModel {
+    return GalleryViewModel(mediaRepository)
 }
 
 private fun provideDetailsViewModel(): DetailsViewModel {
